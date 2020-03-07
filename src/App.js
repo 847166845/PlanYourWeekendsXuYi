@@ -43,12 +43,13 @@ class App extends Component {
     // window.LOG_LEVEL = 'DEBUG';
 
     try {
+      this.setState({ isAuthenticating: true });
       // retrieves session token from local storage
       const session = await Auth.currentSession();
-      this.setAuthStatus(true);
       console.log(session);
       const cognitoUser = await Auth.currentAuthenticatedUser();
       this.setCognitoUser(cognitoUser);
+      this.setAuthStatus(true);
       console.log(cognitoUser);
     } catch (error) {
       console.log(error);

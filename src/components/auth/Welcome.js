@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 
 export default class Welcome extends Component {
   messageForBusinessUser = () => {
+    console.log(this.props);
     if (this.props.location.state.isBusinessUser) {
       return (
         <p>Your account will be reviewed by our site admin. Once approved, you will be able to create events.</p>
         )
     }
+    return <p></p>
   };
 
   render() {
