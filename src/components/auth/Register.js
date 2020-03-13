@@ -85,12 +85,12 @@ class Register extends Component {
     document.getElementById(event.target.id).classList.remove("is-danger");
   }
 
-  onCheckboxChange = event => {
+  onRadioSelect = event => {
+    const isBusinessUser = event.target.value === 'Yes'
     this.setState({
-      [event.target.id]: event.target.checked
+      isBusinessUser: isBusinessUser
     });
-    document.getElementById("username").placeholder = event.target.checked ? "Enter company legal name" : "Enter username";
-    document.getElementById(event.target.id).classList.remove("is-danger");
+    document.getElementById("username").placeholder = isBusinessUser ? "Enter company legal name" : "Enter username";
   }
 
   render() {
@@ -101,17 +101,23 @@ class Register extends Component {
           <FormErrors formerrors={this.state.errors} />
           <form className="col-sm-12" onSubmit={this.handleSubmit}>
             <div className="form-group row">
-              <label className="col-sm-6 col-form-label" htmlFor="isBusinessUser">Business User: </label>
-              <div className="onoffswitch">
-                <input 
-                  type="checkbox" 
-                  name="onoffswitch" 
-                  className="onoffswitch-checkbox" 
-                  id="isBusinessUser"
-                  onChange={this.onCheckboxChange}/>
-                <label className="onoffswitch-label" htmlFor="isBusinessUser">
-                  <span className="onoffswitch-inner"></span>
-                  <span className="onoffswitch-switch"></span>
+              <label htmlFor="isBusinessUser" className="col-sm-3 col-form-label col-form-label-sm">Business User:</label>
+              <div id="isBusinessUser" className="col-sm-9 form-control-sm">
+                <label className="radio-inline">
+                  <input 
+                    type="radio" 
+                    checked={this.state.isBusinessUser}
+                    onChange={this.onRadioSelect}
+                    value="Yes" 
+                  /> Yes 
+                </label>
+                <label className="radio-inline">
+                  <input 
+                    type="radio"
+                    checked={!this.state.isBusinessUser}
+                    onChange={this.onRadioSelect}
+                    value="No" 
+                  /> No
                 </label>
               </div>
             </div>
