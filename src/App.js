@@ -13,6 +13,7 @@ import ChangePassword from './components/auth/ChangePassword';
 import ChangePasswordConfirm from './components/auth/ChangePasswordConfirm';
 import Welcome from './components/auth/Welcome';
 import Footer from './components/Footer';
+import UserProfile from './components/user/UserProfile';
 import { Auth } from 'aws-amplify';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
@@ -38,6 +39,13 @@ class App extends Component {
     this.setState({ cognitoUser: cognitoUser});
   }
 
+  setUserType = cognitoUser => {
+    const groups = cognitoUser.signInUserSession.idToken.payload["cognito:groups"];
+    const admin = groups && groups[0]
+    console.log(admin || cognitoUser.attributes["custom:userType"]);
+    this.setState({ userType: admin || cognitoUser.attributes["custom:userType"] });
+  }
+
   async componentDidMount() {
     // enabling debugging mode
     // window.LOG_LEVEL = 'DEBUG';
@@ -51,6 +59,7 @@ class App extends Component {
       this.setCognitoUser(cognitoUser);
       this.setAuthStatus(true);
       console.log(cognitoUser);
+      this.setUserType(cognitoUser);
     } catch (error) {
       console.log(error);
     }
@@ -78,6 +87,7 @@ class App extends Component {
               <Route exact path="/register" render={props => <Register {...props} auth={authProps} />} />
               <Route exact path="/forgotpassword" render={props => <ForgotPassword {...props} auth={authProps} />} />
               <Route exact path="/forgotpasswordverification" render={props => <ForgotPasswordVerification {...props} auth={authProps} />} />
+              <Route exact path="/userprofile" render={props => <UserProfile {...props} auth={authProps} />} />
               <Route exact path="/changepassword" render={props => <ChangePassword {...props} auth={authProps} />} />
               <Route exact path="/changepasswordconfirmation" render={props => <ChangePasswordConfirm {...props} auth={authProps} />} />
               <Route exact path="/welcome" render={props => <Welcome {...props} auth={authProps} />} />

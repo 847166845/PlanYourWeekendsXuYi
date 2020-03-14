@@ -56,9 +56,18 @@ export default class Navbar extends Component {
                 )}
                 {this.props.auth.isAuthenticated && (
                   <div>
-                    <a href="/changepassword" className="button is-light">
-                      Change password
-                    </a>
+                    <div className="btn-group button is-light">
+                      <a href="/userprofile" type="button" className="btn is-light">Profile</a>
+                      <button type="button" className="btn is-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span className="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <div className="dropdown-menu">
+                        <a className="dropdown-item" href="/changepassword">Change password</a>
+                        <a className="dropdown-item" href="/forgotpassword">Forgot password</a>
+                        <div className="dropdown-divider"></div>
+                        <a className="dropdown-item" href="#">TODO</a>
+                      </div>
+                    </div>
                     <a href="/" onClick={this.handleLogOut} className="button is-light">
                       Log out
                     </a>
