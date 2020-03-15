@@ -31,52 +31,36 @@ export default class Navbar extends Component {
             <a href="/events" className="navbar-item">
               Events
             </a>
-            <a href="/admin" className="navbar-item">
-              Admin
-            </a>
           </div>
 
-          <div className="navbar-end">
-            <div className="navbar-item">
-              {this.props.auth.isAuthenticated && this.props.auth.user && (
-                <p>
-                  Hello {this.props.auth.user.username}
-                </p>
-              )}
-              <div className="buttons">
-                {!this.props.auth.isAuthenticated && (
-                  <div>
-                    <a href="/register" className="button is-primary">
-                      <strong>Register</strong>
-                    </a>
-                    <a href="/login" className="button is-light">
-                      Log in
-                    </a>
-                  </div>
-                )}
-                {this.props.auth.isAuthenticated && (
-                  <div>
-                    <div className="btn-group button is-light">
-                      <a href="/userprofile" type="button" className="btn is-light">Profile</a>
-                      <button type="button" className="btn is-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span className="sr-only">Toggle Dropdown</span>
-                      </button>
-                      <div className="dropdown-menu">
-                        <a className="dropdown-item" href="/changepassword">Change password</a>
-                        <a className="dropdown-item" href="/forgotpassword">Forgot password</a>
-                        <div className="dropdown-divider"></div>
-                        <a className="dropdown-item" href="#">TODO</a>
-                      </div>
-                    </div>
-                    <a href="/" onClick={this.handleLogOut} className="button is-light">
-                      Log out
-                    </a>
-                  </div>
-                )}
-                
+          
+          {!this.props.auth.isAuthenticated && (
+            <div className="navbar-end">
+              <a href="/login" className="navbar-item">
+                SignIn
+              </a>
+              <a href="/register" className="navbar-item">
+                Register
+              </a>
+            </div>
+          )}
+          {this.props.auth.isAuthenticated && (
+            <div className="navbar-end">
+              <div className="btn-group">
+                <a href="/userprofile" type="button" className="navbar-item dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span>Account & Profiles</span>
+                  <span className="sr-only">Toggle Dropdown</span>
+                </a>
+                <div className="dropdown-menu dropdown-menu-right">
+                  <a className="dropdown-item" href="/changepassword">Change password</a>
+                  <a className="dropdown-item" href="/forgotpassword">Forgot password</a>
+                  <div className="dropdown-divider"></div>
+                  <a className="dropdown-item" href="/" onClick={this.handleLogOut} >Sign out</a>
+                  {this.props.auth.userType === "Admin" && <a className="dropdown-item" href="/admin/businessadmin">Business Admin</a>}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </nav>
     )

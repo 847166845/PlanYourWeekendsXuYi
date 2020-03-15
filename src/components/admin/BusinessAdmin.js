@@ -1,40 +1,44 @@
 import React, { Component, Fragment } from 'react';
-import Product from './Product';
+import Event from '../Events';
 import axios from "axios";
-const config = require('../config.json');
+const config = require('../../config.json');
 
-export default class EventsAdmin extends Component {
+export default class BusinessAdmin extends Component {
 
   state = {
-    newproduct: { 
-      "productname": "", 
-      "id": ""
+    newEvent: { 
+      "name": "", 
+      "description": "",
+      "price": null,
+      "startTime": null,
+      "endTime": null,
+      "bookingLink": null
     },
-    products: []
+    events: []
   }
 
-  handleAddProduct = async (id, event) => {
+  handleAddEvent = async (event) => {
     event.preventDefault();
     // add call to AWS API Gateway add product endpoint here
     try {
-      const params = {
-        "id": id,
-        "productname": this.state.newproduct.productname
-      };
-      await axios.post(`${config.api.invokeUrl}/products/${id}`, params);
-      this.setState({ products: [...this.state.products, this.state.newproduct] });
-      this.setState({ newproduct: { "productname": "", "id": "" }});
+      // const params = {
+      //   "id": id,
+      //   "productname": this.state.newproduct.productname
+      // };
+      // await axios.post(`${config.api.invokeUrl}/products/${id}`, params);
+      this.setState({ events: [...this.state.events, this.state.newEvent] });
     }catch (err) {
       console.log(`An error has occurred: ${err}`);
     }
   }
 
-  handleUpdateProduct = async (id, name) => {
+  handleUpdateEvent = async (id, name, description) => {
     // add call to AWS API Gateway update product endpoint here
     try {
       const params = {
         "id": id,
-        "productname": name
+        "eventName": name,
+        "description": description
       };
       await axios.patch(`${config.api.invokeUrl}/products/${id}`, params);
       const productToUpdate = [...this.state.products].find(product => product.id === id);
@@ -47,7 +51,7 @@ export default class EventsAdmin extends Component {
     }
   }
 
-  handleDeleteProduct = async (id, event) => {
+  handleDeleteEvent = async (id, event) => {
     event.preventDefault();
     // add call to AWS API Gateway delete product endpoint here
     try {
@@ -59,7 +63,7 @@ export default class EventsAdmin extends Component {
     }
   }
 
-  fetchProducts = async () => {
+  fetchEvents = async () => {
     // add call to AWS API Gateway to fetch products here
     // then set them in state
     try {
@@ -71,11 +75,11 @@ export default class EventsAdmin extends Component {
     }
   }
 
-  onAddProductNameChange = event => this.setState({ newproduct: { ...this.state.newproduct, "productname": event.target.value } });
-  onAddProductIdChange = event => this.setState({ newproduct: { ...this.state.newproduct, "id": event.target.value } });
+  onAddEventNameChange = event => this.setState({ newEvent: { ...this.state.newEvent, "name": event.target.value } });
+  onAddEventDescriptionChange = event => this.setState({ newEvent: { ...this.state.newEvent, "description": event.target.value } });
 
   componentDidMount = () => {
-    this.fetchProducts();
+    this.fetchEvents();
   }
 
   render() {
@@ -83,34 +87,34 @@ export default class EventsAdmin extends Component {
       <Fragment>
         <section className="section">
           <div className="container">
-            <h1>Product Admin</h1>
-            <p className="subtitle is-5">Add and remove products using the form below:</p>
+            <h1>Business Admin</h1>
+            <p className="subtitle is-5">Add and remove Events for a business using the form below:</p>
             <br />
             <div className="columns">
               <div className="column is-one-third">
-                <form onSubmit={event => this.handleAddProduct(this.state.newproduct.id, event)}>
+                <form onSubmit={event => this.handleAddEvent(event)}>
                   <div className="field has-addons">
                     <div className="control">
                       <input 
                         className="input is-medium"
                         type="text" 
                         placeholder="Enter name"
-                        value={this.state.newproduct.productname}
-                        onChange={this.onAddProductNameChange}
+                        value={this.state.newEvent.name}
+                        onChange={this.onAddEventNameChange}
                       />
                     </div>
                     <div className="control">
                       <input 
                         className="input is-medium"
                         type="text" 
-                        placeholder="Enter id"
-                        value={this.state.newproduct.id}
-                        onChange={this.onAddProductIdChange}
+                        placeholder="Enter description"
+                        value={this.state.newEvent.description}
+                        onChange={this.onAddEventDescriptionChange}
                       />
                     </div>
                     <div className="control">
                       <button type="submit" className="button is-primary is-medium">
-                        Add product
+                        Add event
                       </button>
                     </div>
                   </div>
@@ -120,14 +124,14 @@ export default class EventsAdmin extends Component {
                 <div className="tile is-ancestor">
                   <div className="tile is-4 is-parent  is-vertical">
                     { 
-                      this.state.products.map((product, index) => 
-                        <Product 
-                          isAdmin={true}
-                          handleUpdateProduct={this.handleUpdateProduct}
-                          handleDeleteProduct={this.handleDeleteProduct} 
-                          name={product.productname} 
-                          id={product.id}
-                          key={product.id}
+                      this.state.events.map((event, index) => 
+                        <Event 
+                          isAdmin={this.props.auth.userType === 'Admin'}
+                          handleUpdateEvent={this.handleUpdateEvent}
+                          handleDeleteEvent={this.handleDeleteEvent} 
+                          name={event.name}
+                          description={event.description}
+                          key={event.name}
                         />)
                     }
                   </div>
