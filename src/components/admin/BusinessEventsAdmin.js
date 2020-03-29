@@ -3,21 +3,21 @@ import Event from '../Events';
 import axios from "axios";
 const config = require('../../config.json');
 
-export default class BusinessAdmin extends Component {
+export default class BusinessEventsAdmin extends Component {
 
   state = {
-    newBusiness: { 
-      "companyLegalName": "",
-      "joinedTime": null,
-      "websiteLink": null,
+    newEvent: { 
+      "name": "", 
       "description": "",
-      "userName": "",
-      "password": "",
+      "price": null,
+      "startTime": null,
+      "endTime": null,
+      "bookingLink": null
     },
-    businesses: []
+    events: []
   }
 
-  handleAddBusiness = async (event) => {
+  handleAddEvent = async (event) => {
     event.preventDefault();
     // add call to AWS API Gateway add product endpoint here
     try {
@@ -26,30 +26,28 @@ export default class BusinessAdmin extends Component {
       //   "productname": this.state.newproduct.productname
       // };
       // await axios.post(`${config.api.invokeUrl}/products/${id}`, params);
-      this.setState({ businesses: [...this.state.businesses, this.state.newbusiness] });
+      this.setState({ events: [...this.state.events, this.state.newEvent] });
     }catch (err) {
-      console.log(`An error has occurred adding a business: ${err}`);
+      console.log(`An error has occurred: ${err}`);
     }
   }
 
-  handleUpdateBusiness = async (companyLegalName, name, description) => {
+  handleUpdateEvent = async (id, name, description) => {
     // add call to AWS API Gateway update product endpoint here
     try {
       const params = {
-        "companyLegalName": "",
-        "joinedTime": null,
-        "websiteLink": null,
-        "description": "",
-        "userName": "",
-        "password": "",
+        "id": id,
+        "eventName": name,
+        "description": description
       };
-      // await axios.patch(`${config.api.invokeUrl}/products/${id}`, params);
-      const businessToUpdate = [...this.state.businesses].find(business => business.companyLegalName === companyLegalName);
-      const updatedBusinesses = [...this.state.businesses].filter(business => business.companyLegalName !== companyLegalName);
-      updatedBusinesses.push(businessToUpdate);
-      this.setState({businesses: updatedBusinesses});
+      await axios.patch(`${config.api.invokeUrl}/products/${id}`, params);
+      const productToUpdate = [...this.state.products].find(product => product.id === id);
+      const updatedProducts = [...this.state.products].filter(product => product.id !== id);
+      productToUpdate.productname = name;
+      updatedProducts.push(productToUpdate);
+      this.setState({products: updatedProducts});
     }catch (err) {
-      console.log(`Error updating businesses: ${err}`);
+      console.log(`Error updating product: ${err}`);
     }
   }
 
@@ -77,23 +75,10 @@ export default class BusinessAdmin extends Component {
     }
   }
 
-  fetchBusinesses = async () => {
-    // add call to AWS API Gateway to fetch businesses here
-    // then set them in state
-    try {
-      const res = await axios.get(`${config.api.invokeUrl}/products`);
-      const products = res.data;
-      this.setState({ products: products });
-    } catch (err) {
-      console.log(`An error has occurred: ${err}`);
-    }
-  }
-
   onAddEventNameChange = event => this.setState({ newEvent: { ...this.state.newEvent, "name": event.target.value } });
   onAddEventDescriptionChange = event => this.setState({ newEvent: { ...this.state.newEvent, "description": event.target.value } });
 
   componentDidMount = () => {
-    this.fetchBusinesses();
     this.fetchEvents();
   }
 
@@ -107,7 +92,7 @@ export default class BusinessAdmin extends Component {
             <br />
             <div className="columns">
               <div className="column is-one-third">
-                <form onSubmit={event => this.handleAddBusiness(event)}>
+                <form onSubmit={event => this.handleAddEvent(event)}>
                   <div className="field has-addons">
                     <div className="control">
                       <input 
@@ -142,7 +127,7 @@ export default class BusinessAdmin extends Component {
                       this.state.events.map((event, index) => 
                         <Event 
                           isAdmin={this.props.auth.userType === 'Admin'}
-                          handleUpdateEvent={this.handleUpdateBusiness}
+                          handleUpdateEvent={this.handleUpdateEvent}
                           handleDeleteEvent={this.handleDeleteEvent} 
                           name={event.name}
                           description={event.description}

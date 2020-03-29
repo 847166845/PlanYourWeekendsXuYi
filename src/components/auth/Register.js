@@ -35,6 +35,7 @@ class Register extends Component {
     this.clearErrorState();
     const error = Validate(event, this.state);
     if (error) {
+      console.log(error);
       this.setState({
         errors: { ...this.state.errors, ...error }
       });
@@ -53,6 +54,7 @@ class Register extends Component {
           state: {isBusinessUser: isBusinessUser}
         });
     } catch (error) {
+        console.log(error);
         let err = null;
         !error.message ? err = { "message": error } : err = error;
         this.setState({
