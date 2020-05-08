@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './css/App.css';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import Events from './components/Events-copy';
 import BusinessAdmin from './components/admin/BusinessAdmin';
 import LogIn from './components/auth/LogIn';
 import Register from './components/auth/Register';
@@ -82,7 +81,6 @@ class App extends Component {
             <Navbar auth={authProps}/>
             <Switch>
               <Route exact path="/" render={props => <Home {...props} auth={authProps} />} />
-              <Route exact path="/events" render={props => <Events {...props} auth={authProps} />} />
               <Route exact path="/businessadmin" render={props => <BusinessAdmin {...props} auth={authProps} />} />
               <Route exact path="/login" render={props => <LogIn {...props} auth={authProps} />} />
               <Route exact path="/register" render={props => <Register {...props} auth={authProps} />} />

@@ -55,8 +55,9 @@ export default class Navbar extends Component {
                   <a className="dropdown-item" href="/changepassword">Change password</a>
                   <a className="dropdown-item" href="/forgotpassword">Forgot password</a>
                   <div className="dropdown-divider"></div>
+                  {/*this.props.auth.userType === "Admin" && <a className="dropdown-item" href="/admin/businessadmin">Business Admin</a>*/}
+                  <a className="dropdown-item" href="/businessadmin">Business Admin</a>
                   <a className="dropdown-item" href="/" onClick={this.handleLogOut} >Sign out</a>
-                  {this.props.auth.userType === "Admin" && <a className="dropdown-item" href="/admin/businessadmin">Business Admin</a>}
                 </div>
               </div>
             </div>
